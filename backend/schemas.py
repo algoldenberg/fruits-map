@@ -1,9 +1,7 @@
 from pydantic import BaseModel, Field
-from typing import Optional, List
+from typing import Optional
 from datetime import datetime
 
-
-# ===== Category =====
 
 class CategoryBase(BaseModel):
     name: str
@@ -20,31 +18,8 @@ class Category(CategoryBase):
     created_at: datetime
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
-
-# ===== Review =====
-
-class ReviewBase(BaseModel):
-    rating: int = Field(ge=1, le=5)
-    comment: Optional[str] = None
-    author_name: Optional[str] = None
-
-
-class ReviewCreate(ReviewBase):
-    place_id: int
-
-
-class Review(ReviewBase):
-    id: int
-    created_at: datetime
-    place_id: int
-
-    class Config:
-        orm_mode = True
-
-
-# ===== Place =====
 
 class PlaceBase(BaseModel):
     name: str
@@ -52,7 +27,7 @@ class PlaceBase(BaseModel):
     lat: float
     lon: float
     description: Optional[str] = None
-    category_id: Optional[int] = None
+    category_id: int
 
 
 class PlaceCreate(PlaceBase):
@@ -62,8 +37,43 @@ class PlaceCreate(PlaceBase):
 class Place(PlaceBase):
     id: int
     created_at: datetime
-    category: Optional[Category] = None
-    reviews: List[Review] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
+
+
+class ReviewBase(BaseModel):
+    place_id: int
+    rating: int = Field(ge=1, le=5)
+    comment: Optional[str] = None
+    author_name: Optional[str] = None
+
+
+class ReviewCreate(ReviewBase):
+    pass
+
+
+class Review(ReviewBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
+
+
+class CategorySuggestionBase(BaseModel):
+    name: str
+    description: Optional[str] = None
+    author_name: Optional[str] = None
+
+
+class CategorySuggestionCreate(CategorySuggestionBase):
+    pass
+
+
+class CategorySuggestion(CategorySuggestionBase):
+    id: int
+    created_at: datetime
+
+    class Config:
+        from_attributes = True
