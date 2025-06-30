@@ -1,5 +1,6 @@
 from fastapi import FastAPI
 from database import engine, Base
+from routers import categories, places, reviews
 
 app = FastAPI(
     title="Fruits Map API",
@@ -9,6 +10,11 @@ app = FastAPI(
 
 # Автоматическое создание таблиц, если их нет
 Base.metadata.create_all(bind=engine)
+
+# Роуты
+app.include_router(categories.router)
+app.include_router(places.router)
+app.include_router(reviews.router)
 
 # Корневой эндпоинт
 @app.get("/")
