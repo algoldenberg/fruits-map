@@ -1,17 +1,4 @@
-@import "leaflet/dist/leaflet.css";
+@import "tailwindcss/preflight";
+@import "tailwindcss/utilities";
 
-@tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-html, body, #root {
-  height: 100%;
-  margin: 0;
-  padding: 0;
-}
-
-body {
-  background-color: #111827;
-  color: white;
-  font-family: system-ui, sans-serif;
-}
