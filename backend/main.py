@@ -1,13 +1,13 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.staticfiles import StaticFiles
+from fastapi.exceptions import RequestValidationError
+from starlette.exceptions import HTTPException as StarletteHTTPException
+
 from database import engine, Base
 from routers import router as api_router
 from routers import files
 from exceptions import custom_http_exception_handler, validation_exception_handler
-from fastapi.exceptions import RequestValidationError
-from starlette.exceptions import HTTPException as StarletteHTTPException
-
 
 app = FastAPI(
     title="Fruits Map API",
@@ -19,16 +19,16 @@ app = FastAPI(
 app.mount("/static", StaticFiles(directory="backend/static"), name="static")
 app.mount("/uploads", StaticFiles(directory="backend/static/uploads"), name="uploads")
 
-# ✅ Настройка CORS
+# ✅ Настройка CORS (чтобы фронт спокойно делал запросы)
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["*"],  # Можно указать список доменов фронта
+    allow_origins=["*"],  # Можно ограничить доступ конкретными доменами фронта
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# ✅ Создание таблиц базы данных
+# ✅ Создание таблиц базы данных (если их нет)
 Base.metadata.create_all(bind=engine)
 
 # ✅ Подключение всех роутеров
